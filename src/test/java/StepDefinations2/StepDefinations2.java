@@ -1,10 +1,13 @@
 package StepDefinations2;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
@@ -44,11 +47,20 @@ public class StepDefinations2 {
 		System.out.println("User has reached login page");
 	}
 
-	@When("^user enter (.*) and (.*)$")
-	public void user_enter_username_and_password(String username, String password) {
-		// Write code here that turns the phrase above into concrete actions
-		driver.findElement(By.id("user-name")).sendKeys(username);
-		driver.findElement(By.id("password")).sendKeys(password);
+//	@When("^user enter (.*) and (.*)$")
+//	public void user_enter_username_and_password(String username, String password) {
+//		// Write code here that turns the phrase above into concrete actions
+//		driver.findElement(By.id("user-name")).sendKeys(username);
+//		driver.findElement(By.id("password")).sendKeys(password);
+//		System.out.println("User has entered username and password successfully");
+//	}
+
+	@When("user enters creds using datatable")
+	public void user_enters_creds_using_datatable(DataTable dataTable) {
+		List<List<String>> data = dataTable.cells();
+		driver.findElement(By.id("user-name")).sendKeys(data.get(0).get(0));
+		driver.findElement(By.id("password")).sendKeys(data.get(0).get(1));
+
 		System.out.println("User has entered username and password successfully");
 	}
 
@@ -72,3 +84,8 @@ public class StepDefinations2 {
 		driver.navigate().to("https://www.saucedemo.com/logout");
 	}
 }
+
+
+// mvn clean test
+// mvn verify -DskipTests
+// https://stackoverflow.com/questions/51257224/maven-cucumber-reporting-plugin-is-not-generating-the-report-nothing-happens
